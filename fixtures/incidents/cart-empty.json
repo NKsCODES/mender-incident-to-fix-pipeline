@@ -1,0 +1,33 @@
+{
+  "event_id": "cart-empty",
+  "service": "checkout",
+  "environment": "production",
+  "release": "checkout@2026.10.1",
+  "exception": {
+    "type": "IndexError",
+    "value": "list index out of range",
+    "frames": [
+      {
+        "filename": "checkout/handlers.py",
+        "lineno": 21,
+        "function": "cart_view",
+        "context_line": "return {\"currency\": cart.cart_currency(items), \"total\": cart.cart_total(items)}",
+        "in_app": true
+      },
+      {
+        "filename": "checkout/cart.py",
+        "lineno": 6,
+        "function": "cart_currency",
+        "context_line": "return items[0][\"currency\"]",
+        "in_app": true
+      }
+    ]
+  },
+  "request": {
+    "route": "GET /cart",
+    "payload": {
+      "items": []
+    }
+  },
+  "count": 530
+}

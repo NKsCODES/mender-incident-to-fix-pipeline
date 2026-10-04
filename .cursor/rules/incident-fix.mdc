@@ -1,0 +1,12 @@
+---
+description: How to fix a production incident in this repository. Applies to interactive Cursor sessions and to Mender runs.
+alwaysApply: false
+---
+When fixing a production incident:
+
+- Reproduce first. Add one new test under tests/ that fails for the same reason as the incident, before changing any source file.
+- Fix the root cause with the smallest change. Docstrings and existing tests define intended behaviour.
+- Never hide an error. No bare `except`, no `except Exception`, no skip or xfail markers, no silent defaults.
+- Never edit or delete an existing test to make a change pass.
+- Do not touch CI, infrastructure, migrations or dependency files as part of an incident fix.
+- If intended behaviour cannot be determined from the code, change nothing and say what decision is needed.

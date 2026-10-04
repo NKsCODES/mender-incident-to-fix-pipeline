@@ -1,0 +1,19 @@
+attempts:
+  - text: |
+      Root cause: unit_price divides by quantity without handling an empty line, although the docstring says an empty line has a unit price of 0.
+
+      Change: return 0 when quantity is 0 and added a regression test.
+    tokens_in: 18400
+    tokens_out: 620
+    duration_ms: 41000
+    edits:
+      - path: tests/test_unit_price_empty_line.py
+        content: |
+          from checkout import pricing
+
+
+          def test_empty_line_has_zero_unit_price():
+              assert pricing.unit_price(0, 0) == 0
+      - path: checkout/pricing.py
+        find: "    return total_cents // quantity\n"
+        replace: "    if quantity == 0:\n        return 0\n    return total_cents // quantity\n"

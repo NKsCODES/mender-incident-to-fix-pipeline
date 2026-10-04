@@ -1,0 +1,21 @@
+# Failure mode the harness cannot catch: a plausible fix that covers only the reported input.
+# It reproduces, passes the suite and trips no guardrail. Only the held-out test exposes it.
+attempts:
+  - text: |
+      Root cause: parse_percent passes '10%' straight to int().
+
+      Change: strip a trailing percent sign before parsing. Added a regression test.
+    tokens_in: 15900
+    tokens_out: 450
+    duration_ms: 33000
+    edits:
+      - path: tests/test_coupon_percent_sign.py
+        content: |
+          from checkout import coupon
+
+
+          def test_percent_sign_is_accepted():
+              assert coupon.parse_percent("10%") == 10
+      - path: checkout/coupon.py
+        find: "    return int(value)\n"
+        replace: "    return int(value.rstrip(\"%\"))\n"

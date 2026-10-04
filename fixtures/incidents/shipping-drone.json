@@ -1,0 +1,34 @@
+{
+  "event_id": "shipping-drone",
+  "service": "checkout",
+  "environment": "production",
+  "release": "checkout@2026.10.1",
+  "exception": {
+    "type": "ZeroDivisionError",
+    "value": "division by zero",
+    "frames": [
+      {
+        "filename": "checkout/handlers.py",
+        "lineno": 33,
+        "function": "delivery",
+        "context_line": "return {\"eta_days\": shipping.eta_days(payload[\"distance_km\"], payload[\"mode\"])}",
+        "in_app": true
+      },
+      {
+        "filename": "checkout/shipping.py",
+        "lineno": 7,
+        "function": "eta_days",
+        "context_line": "return math.ceil(distance_km / SPEEDS_KM_PER_DAY[mode])",
+        "in_app": true
+      }
+    ]
+  },
+  "request": {
+    "route": "GET /delivery/eta",
+    "payload": {
+      "distance_km": 12,
+      "mode": "drone"
+    }
+  },
+  "count": 9
+}

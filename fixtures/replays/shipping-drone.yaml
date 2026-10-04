@@ -1,0 +1,8 @@
+# The right answer is sometimes no patch: the intended behaviour is not determinable from the code.
+attempts:
+  - text: |
+      I made no changes. SPEEDS_KM_PER_DAY['drone'] is 0, which causes the division by zero, but nothing in the code or tests says whether drone delivery should be rejected, given a real speed, or removed. This needs a product decision.
+    tokens_in: 14200
+    tokens_out: 210
+    duration_ms: 26000
+    edits: []

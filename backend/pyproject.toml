@@ -1,0 +1,27 @@
+[project]
+name = "mender"
+version = "0.1.0"
+description = "Incident to fix pipeline driven by the Cursor agent, with verification, guardrails, tracing and evals"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.110",
+  "uvicorn[standard]>=0.29",
+  "pyyaml>=6",
+  "prometheus-client>=0.20",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "httpx>=0.27"]
+
+[project.scripts]
+mender = "mender.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["mender*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

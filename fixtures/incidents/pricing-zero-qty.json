@@ -1,0 +1,34 @@
+{
+  "event_id": "pricing-zero-qty",
+  "service": "checkout",
+  "environment": "production",
+  "release": "checkout@2026.10.1",
+  "exception": {
+    "type": "ZeroDivisionError",
+    "value": "integer division or modulo by zero",
+    "frames": [
+      {
+        "filename": "checkout/handlers.py",
+        "lineno": 7,
+        "function": "line_summary",
+        "context_line": "return {\"unit_price\": pricing.unit_price(payload[\"total_cents\"], payload[\"qty\"])}",
+        "in_app": true
+      },
+      {
+        "filename": "checkout/pricing.py",
+        "lineno": 6,
+        "function": "unit_price",
+        "context_line": "return total_cents // quantity",
+        "in_app": true
+      }
+    ]
+  },
+  "request": {
+    "route": "POST /cart/lines/summary",
+    "payload": {
+      "total_cents": 0,
+      "qty": 0
+    }
+  },
+  "count": 212
+}

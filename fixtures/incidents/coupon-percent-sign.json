@@ -1,0 +1,33 @@
+{
+  "event_id": "coupon-percent-sign",
+  "service": "checkout",
+  "environment": "production",
+  "release": "checkout@2026.10.1",
+  "exception": {
+    "type": "ValueError",
+    "value": "invalid literal for int() with base 10: '10%'",
+    "frames": [
+      {
+        "filename": "checkout/handlers.py",
+        "lineno": 29,
+        "function": "apply_coupon",
+        "context_line": "return {\"percent\": coupon.parse_percent(payload[\"value\"])}",
+        "in_app": true
+      },
+      {
+        "filename": "checkout/coupon.py",
+        "lineno": 7,
+        "function": "parse_percent",
+        "context_line": "return int(value)",
+        "in_app": true
+      }
+    ]
+  },
+  "request": {
+    "route": "POST /coupon",
+    "payload": {
+      "value": "10%"
+    }
+  },
+  "count": 118
+}

@@ -1,0 +1,33 @@
+{
+  "event_id": "tax-missing-region",
+  "service": "checkout",
+  "environment": "production",
+  "release": "checkout@2026.10.1",
+  "exception": {
+    "type": "AttributeError",
+    "value": "'NoneType' object has no attribute 'upper'",
+    "frames": [
+      {
+        "filename": "checkout/handlers.py",
+        "lineno": 25,
+        "function": "invoice",
+        "context_line": "return {\"tax\": tax.tax_cents(payload[\"subtotal_cents\"], payload.get(\"region\"))}",
+        "in_app": true
+      },
+      {
+        "filename": "checkout/tax.py",
+        "lineno": 6,
+        "function": "tax_cents",
+        "context_line": "return round(subtotal_cents * REGION_RATES[region.upper()])",
+        "in_app": true
+      }
+    ]
+  },
+  "request": {
+    "route": "POST /invoice",
+    "payload": {
+      "subtotal_cents": 1000
+    }
+  },
+  "count": 64
+}

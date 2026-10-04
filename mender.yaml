@@ -1,0 +1,10 @@
+# One entry per customer service. Paths are relative to this file; git URLs also work.
+services:
+  checkout:
+    repo: fixtures/target-repo
+    test_cmd: ["python", "-m", "pytest", "-q", "-x"]
+    default_mode: shadow        # every new service starts in shadow
+    max_files: 6
+    max_lines: 150
+    extra_forbidden_paths: ["checkout/payments/**"]
+    # github_repo: your-org/checkout   # used only when MENDER_PUBLISH=1

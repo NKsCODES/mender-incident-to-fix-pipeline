@@ -1,0 +1,35 @@
+{
+  "event_id": "currency-lowercase",
+  "service": "checkout",
+  "environment": "production",
+  "release": "checkout@2026.10.1",
+  "exception": {
+    "type": "KeyError",
+    "value": "'usd'",
+    "frames": [
+      {
+        "filename": "checkout/handlers.py",
+        "lineno": 11,
+        "function": "quote",
+        "context_line": "return {\"amount\": currency.convert(payload[\"amount_cents\"], payload[\"from\"], payload[\"to\"])}",
+        "in_app": true
+      },
+      {
+        "filename": "checkout/currency.py",
+        "lineno": 11,
+        "function": "convert",
+        "context_line": "return round(amount_cents / RATES[src] * RATES[dst])",
+        "in_app": true
+      }
+    ]
+  },
+  "request": {
+    "route": "POST /quote",
+    "payload": {
+      "amount_cents": 100,
+      "from": "usd",
+      "to": "inr"
+    }
+  },
+  "count": 87
+}

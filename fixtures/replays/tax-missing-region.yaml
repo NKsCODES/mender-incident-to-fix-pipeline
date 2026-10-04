@@ -1,0 +1,36 @@
+# First attempt is wrong and caught by its own regression test; the retry with test output succeeds.
+attempts:
+  - text: |
+      Root cause: region can be None. Change: default the region when it is missing.
+    tokens_in: 19100
+    tokens_out: 590
+    duration_ms: 44000
+    edits:
+      - path: tests/test_tax_export.py
+        content: |
+          from checkout import tax
+
+
+          def test_missing_region_is_zero_rated():
+              assert tax.tax_cents(1000, None) == 0
+      - path: checkout/tax.py
+        find: "    return round(subtotal_cents * REGION_RATES[region.upper()])\n"
+        replace: "    region = region or \"MH\"\n    return round(subtotal_cents * REGION_RATES[region.upper()])\n"
+  - text: |
+      Root cause: tax_cents calls region.upper() on None. The docstring says a missing region is an export order and zero rated. My first attempt defaulted to MH, which charged GST on exports.
+
+      Change: treat None as EXPORT. Regression test kept.
+    tokens_in: 23800
+    tokens_out: 640
+    duration_ms: 47000
+    edits:
+      - path: tests/test_tax_export.py
+        content: |
+          from checkout import tax
+
+
+          def test_missing_region_is_zero_rated():
+              assert tax.tax_cents(1000, None) == 0
+      - path: checkout/tax.py
+        find: "    return round(subtotal_cents * REGION_RATES[region.upper()])\n"
+        replace: "    region = region or \"EXPORT\"\n    return round(subtotal_cents * REGION_RATES[region.upper()])\n"

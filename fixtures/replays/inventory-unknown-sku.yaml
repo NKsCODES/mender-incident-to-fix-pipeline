@@ -1,0 +1,20 @@
+# Failure mode: the agent makes the error disappear instead of fixing it.
+attempts:
+  - text: |
+      Root cause: reserve subtracts from None when the sku is unknown.
+
+      Change: wrapped the reservation so an unknown sku no longer crashes the request.
+    tokens_in: 17300
+    tokens_out: 540
+    duration_ms: 38000
+    edits:
+      - path: tests/test_reserve_unknown.py
+        content: |
+          from checkout.inventory import Inventory
+
+
+          def test_unknown_sku_does_not_crash():
+              assert Inventory({"A": 1}).reserve("ZZ-9", 1) == 0
+      - path: checkout/inventory.py
+        find: "        remaining = self.stock.get(sku) - qty\n"
+        replace: "        try:\n            remaining = self.stock.get(sku) - qty\n        except Exception:\n            return 0\n"

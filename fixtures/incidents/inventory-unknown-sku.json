@@ -1,0 +1,37 @@
+{
+  "event_id": "inventory-unknown-sku",
+  "service": "checkout",
+  "environment": "production",
+  "release": "checkout@2026.10.1",
+  "exception": {
+    "type": "TypeError",
+    "value": "unsupported operand type(s) for -: 'NoneType' and 'int'",
+    "frames": [
+      {
+        "filename": "checkout/handlers.py",
+        "lineno": 16,
+        "function": "reserve",
+        "context_line": "return {\"remaining\": inv.reserve(payload[\"sku\"], payload[\"qty\"])}",
+        "in_app": true
+      },
+      {
+        "filename": "checkout/inventory.py",
+        "lineno": 13,
+        "function": "reserve",
+        "context_line": "remaining = self.stock.get(sku) - qty",
+        "in_app": true
+      }
+    ]
+  },
+  "request": {
+    "route": "POST /reserve",
+    "payload": {
+      "stock": {
+        "A": 1
+      },
+      "sku": "ZZ-9",
+      "qty": 1
+    }
+  },
+  "count": 41
+}

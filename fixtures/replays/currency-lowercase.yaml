@@ -1,0 +1,24 @@
+attempts:
+  - text: |
+      Root cause: convert indexes RATES with the raw code, so 'usd' raises KeyError. The docstring promises case-insensitive codes and UnsupportedCurrency for unknown ones.
+
+      Change: normalise codes to upper case and raise UnsupportedCurrency for unknown codes. Added a regression test.
+    tokens_in: 21900
+    tokens_out: 910
+    duration_ms: 52000
+    edits:
+      - path: tests/test_currency_case.py
+        content: |
+          from checkout import currency
+
+
+          def test_lowercase_codes_convert():
+              assert currency.convert(100, "usd", "inr") == 8300
+      - path: checkout/currency.py
+        find: "    return round(amount_cents / RATES[src] * RATES[dst])\n"
+        replace: |2
+              src, dst = src.upper(), dst.upper()
+              for code in (src, dst):
+                  if code not in RATES:
+                      raise UnsupportedCurrency(code)
+              return round(amount_cents / RATES[src] * RATES[dst])

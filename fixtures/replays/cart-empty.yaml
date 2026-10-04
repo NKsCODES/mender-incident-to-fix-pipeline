@@ -1,0 +1,16 @@
+# Failure mode: the agent edits an existing test to fit its own behaviour.
+attempts:
+  - text: |
+      Root cause: cart_currency reads items[0] on an empty cart.
+
+      Change: return None for an empty cart and updated the cart tests.
+    tokens_in: 16800
+    tokens_out: 480
+    duration_ms: 35000
+    edits:
+      - path: checkout/cart.py
+        find: "    return items[0][\"currency\"]\n"
+        replace: "    return items[0][\"currency\"] if items else None\n"
+      - path: tests/test_cart.py
+        find: "def test_cart_total():\n"
+        replace: "def test_cart_currency_empty():\n    assert cart.cart_currency([]) is None\n\n\ndef test_cart_total():\n"

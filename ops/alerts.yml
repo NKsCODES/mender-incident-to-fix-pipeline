@@ -1,0 +1,28 @@
+# Every alert maps to a section of docs/RUNBOOK.md.
+groups:
+  - name: mender
+    rules:
+      - alert: MenderErrorRateHigh
+        expr: sum(rate(mender_runs_total{outcome="error"}[30m])) / sum(rate(mender_runs_total{outcome!="skipped"}[30m])) > 0.2
+        for: 15m
+        labels: {severity: page}
+        annotations: {summary: "More than 20% of runs end in error", runbook: "docs/RUNBOOK.md#error-rate-high"}
+      - alert: MenderBreakerOpen
+        expr: max by (service) (mender_breaker_open) == 1
+        for: 5m
+        labels: {severity: ticket}
+        annotations: {summary: "{{ $labels.service }} is held in shadow by the circuit breaker", runbook: "docs/RUNBOOK.md#breaker-open"}
+      - alert: MenderQueueBacklog
+        expr: mender_queue_depth > 20
+        for: 10m
+        labels: {severity: ticket}
+        annotations: {summary: "Incident queue is backing up", runbook: "docs/RUNBOOK.md#queue-backlog"}
+      - alert: MenderSpendSpike
+        expr: increase(mender_agent_cost_usd_total[1h]) > 25
+        labels: {severity: ticket}
+        annotations: {summary: "Agent spend above 25 USD in an hour", runbook: "docs/RUNBOOK.md#spend-spike"}
+      - alert: MenderAgentTimeouts
+        expr: sum(rate(mender_agent_attempts_total{result="timeout"}[30m])) / sum(rate(mender_agent_attempts_total[30m])) > 0.25
+        for: 15m
+        labels: {severity: ticket}
+        annotations: {summary: "A quarter of agent calls time out", runbook: "docs/RUNBOOK.md#agent-timeouts"}

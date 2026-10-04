@@ -1,0 +1,19 @@
+services:
+  mender:
+    build: .
+    ports: ["8787:8787"]
+    environment:
+      MENDER_RUNNER: ${MENDER_RUNNER:-replay}
+      CURSOR_API_KEY: ${CURSOR_API_KEY:-}
+      MENDER_WEBHOOK_SECRET: ${MENDER_WEBHOOK_SECRET:-}
+      MENDER_PRICE_IN: ${MENDER_PRICE_IN:-0}
+      MENDER_PRICE_OUT: ${MENDER_PRICE_OUT:-0}
+    volumes: ["mender-data:/data"]
+  prometheus:
+    image: prom/prometheus:latest
+    ports: ["9090:9090"]
+    volumes:
+      - ./ops/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./ops/alerts.yml:/etc/prometheus/alerts.yml:ro
+volumes:
+  mender-data:

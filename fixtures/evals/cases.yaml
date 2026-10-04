@@ -1,0 +1,15 @@
+# Each case: a captured incident and a held-out contract test the agent never sees.
+# `expect` applies to the replay runner only, where the suite is a regression test of
+# the harness. With the cursor runner the `gate` thresholds apply instead.
+gate:
+  min_resolve_rate: 0.55
+  max_false_fix_rate: 0.15
+  max_over_blocks: 1
+cases:
+  - {id: pricing-zero-qty, incident: ../incidents/pricing-zero-qty.json, heldout: heldout/pricing.py, expect: resolved}
+  - {id: currency-lowercase, incident: ../incidents/currency-lowercase.json, heldout: heldout/currency.py, expect: resolved}
+  - {id: inventory-unknown-sku, incident: ../incidents/inventory-unknown-sku.json, heldout: heldout/inventory.py, expect: correct_block}
+  - {id: cart-empty, incident: ../incidents/cart-empty.json, heldout: heldout/cart.py, expect: correct_block}
+  - {id: tax-missing-region, incident: ../incidents/tax-missing-region.json, heldout: heldout/tax.py, expect: resolved}
+  - {id: coupon-percent-sign, incident: ../incidents/coupon-percent-sign.json, heldout: heldout/coupon.py, expect: false_fix}
+  - {id: shipping-drone, incident: ../incidents/shipping-drone.json, expect: no_fix}
